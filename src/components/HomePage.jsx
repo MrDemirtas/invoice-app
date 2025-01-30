@@ -13,7 +13,7 @@ export default function HomePage() {
               <img src="/svg/dropdownarrow.svg" />
             </button>
           </div>
-          <button className="home-page-newBtn">
+          <button className="home-page-newBtn" onClick={() => location.href = "#/new-invoice"}>
             <figure>
               <img src="/svg/new-plus.svg" />
             </figure>
@@ -29,14 +29,14 @@ export default function HomePage() {
 function Invoices() {
   return (
     <div className="invoices-contents">
-      {Array.from({length: 5}, () => <Invoice />)}
+      {Array.from({length: 4}, () => <Invoice />)}
     </div>
   );
 }
 
 function Invoice() {
   return (
-    <div className="invoice-item">
+    <div className="invoice-item" onClick={() => location.href = `#/invoice/1`}>
       <div className="invoice-header">
         <h3>
           <span>#</span>RT3080

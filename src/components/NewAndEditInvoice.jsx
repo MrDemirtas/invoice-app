@@ -1,7 +1,7 @@
 export default function NewAndEditInvoice({ isEdit = false }) {
   return (
     <div className="invoice-edit">
-      <button className="invoice-backBtn">
+      <button className="invoice-backBtn" onClick={() => location.href = "#/"}>
         <img src="/svg/backarrow.svg" />
         <span>Go Back</span>
       </button>
@@ -93,7 +93,7 @@ export default function NewAndEditInvoice({ isEdit = false }) {
             <div className="form-btns">
               {isEdit ? (
                 <>
-                  <button type="button" className="cancelBtn">
+                  <button type="button" className="cancelBtn" onClick={() => location.href = `#/invoice/1`}>
                     Cancel
                   </button>
                   <button type="submit" className="saveBtn">
@@ -102,7 +102,7 @@ export default function NewAndEditInvoice({ isEdit = false }) {
                 </>
               ) : (
                 <>
-                  <button type="button" className="cancelBtn">
+                  <button type="button" className="cancelBtn" onClick={() => location.href = `#/`}>
                     Discard
                   </button>
                   <button type="button" className="saveDraftBtn">

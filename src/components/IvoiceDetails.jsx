@@ -6,7 +6,7 @@ export default function InvoiceDetails() {
   return (
     <>
       <div className="invoice-details">
-        <button className="invoice-backBtn">
+        <button className="invoice-backBtn" onClick={() => location.href = "#/"}>
           <img src="/svg/backarrow.svg" />
           <span>Go Back</span>
         </button>
@@ -78,7 +78,7 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className="invoice-details-interactionBtns">
-        <button className="editBtn">Edit</button>
+        <button className="editBtn" onClick={() => location.href = `#/edit-invoice/1`}>Edit</button>
         <button className="removeBtn" onClick={() => deleteDialog.current.showModal()}>Delete</button>
         <button className="markBtn">Mark as Paid</button>
       </div>

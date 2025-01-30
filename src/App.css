@@ -150,6 +150,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  cursor: pointer;
 }
 
 .invoice-header {
@@ -235,6 +236,7 @@ main {
   color: #0c0e16;
   border: none;
   background-color: transparent;
+  cursor: pointer;
 }
 
 .invoice-details-contents {
@@ -420,6 +422,7 @@ main {
     font-weight: 700;
     line-height: 15px;
     letter-spacing: -0.25px;
+    cursor: pointer;
   }
 }
 
@@ -586,6 +589,7 @@ main {
     font-weight: 700;
     line-height: 15px;
     letter-spacing: -0.25px;
+    cursor: pointer;
   }
 }
 
