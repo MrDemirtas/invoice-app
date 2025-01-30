@@ -1,0 +1,112 @@
+body.dark {
+  background-color: #141625;
+  h1,
+  h2,
+  h3 {
+    color: #fff;
+  }
+
+  h4 {
+    color: #888eb0;
+  }
+
+  header {
+    background-color: #1e2139;
+  }
+
+  .filter-dropdown-btn {
+    color: #fff;
+  }
+
+  .invoice-item {
+    background-color: #1e2139;
+    box-shadow: 0px 10px 10px -10px #48549f1a;
+  }
+
+  .invoice-data {
+    p {
+      color: #dfe3fa;
+    }
+  }
+
+  .invoice-backBtn {
+    color: #fff;
+  }
+
+  .invoice-details-status {
+    background-color: #1e2139;
+    box-shadow: 0px 10px 10px -10px #48549f1a;
+  }
+
+  .invoice-details-body {
+    background-color: #1e2139;
+    box-shadow: 0px 10px 10px -10px #48549f1a;
+  }
+
+  .invoice-details-payment {
+    span,
+    strong {
+      color: #fff;
+    }
+  }
+
+  .invoice-details-items {
+    background-color: #252945;
+  }
+
+  .invoice-details-grandTotal {
+    background-color: #0c0e16;
+  }
+
+  .invoice-details-interactionBtns {
+    background-color: #1e2139;
+    box-shadow: 0px 10px 10px -10px #48549f1a;
+  }
+
+  .editBtn {
+    background-color: #252945;
+    color: #dfe3fa;
+  }
+
+  .invoice-edit-contents {
+    form {
+      fieldset {
+        label {
+          p {
+            color: #888eb0;
+          }
+          input,
+          select {
+            background-color: #1e2139;
+            border: 1px solid #252945;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+
+  .addNewItemBtn {
+    background-color: #252945;
+    color: #888eb0;
+  }
+
+  .form-btns {
+    background-color: #1e2139;
+  }
+
+  .cancelBtn{
+    background-color: #252945;
+    color: #DFE3FA;
+  }
+
+  .saveDraftBtn{
+    background-color: #373B53;
+    color: #DFE3FA;
+  }
+
+  dialog{
+    background-color: #1E2139;
+    box-shadow: 0px 10px 10px -10px #48549F1A;
+  }
+}

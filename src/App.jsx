@@ -1,12 +1,19 @@
+import { useEffect, useState } from "react";
+
 import Header from "./components/Header";
-import HomePage from "./components/HomePage";
+import { getPage } from "./helper.jsx";
 
 export default function App() {
+  const [route, setRoute] = useState(location.hash.substring(1) || "/");
 
+  useEffect(() => {
+    window.addEventListener("hashchange", () => setRoute(location.hash.substring(1)));
+  }, []);
+  
   return (
     <>
       <Header />
-      <HomePage />
+      {getPage(route)}
     </>
   );
 }
