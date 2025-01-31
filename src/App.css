@@ -553,8 +553,10 @@ main {
 }
 
 .itemTotalPrice {
-  h4 {
-    padding-block: 16px;
+  input[disabled]{
+    padding: 16px 0;
+    background-color: transparent !important;
+    border: none !important;
   }
 }
 
