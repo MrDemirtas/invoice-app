@@ -15,24 +15,30 @@ function generateXMString() {
   return `XM${randomNumber}`;
 }
 
-export default function NewAndEditInvoice({ isEdit = false }) {
-  const formRef = useRef(null);
+let isEdit = false;
+let editInvoiceData = null;
+export default function NewAndEditInvoice() {
   const invoiceData = useContext(InvoiceData);
-  const [itemData, setItemData] = useState([{ ...newItemObj }]);
+  if (location.hash.substring(1).split("/").at(1) === "edit-invoice") {
+    isEdit = true;
+    const id = location.hash.substring(1).split("/").at(-1);
+    editInvoiceData = invoiceData.data.find((x) => x.id === id);
+  }else{
+    isEdit = false;
+    editInvoiceData = null;
+  }
+
+  const formRef = useRef(null);
+  const [itemData, setItemData] = useState(isEdit ? [...editInvoiceData.items] : [{ ...newItemObj }]);
   useEffect(() => {
     if (itemData.length <= 0) {
       setItemData([{ ...newItemObj }]);
     }
   }, [itemData]);
 
-  function handleSaveDraft() {
-    formRef.current.submit((e) => handleSubmit(e, status = "Draft"));
-  }
-
   function handleSubmit(e, status = "Pending") {
     e.preventDefault();
-    console.log(e, status);
-    const formData = new FormData(e.target);
+    const formData = new FormData(formRef.current);
     const formObj = Object.fromEntries(formData);
     const { description, address, clientEmail, clientName, invoiceDate, paymentTerms, streetAddress } = formObj;
     const date = new Date(invoiceDate);
@@ -47,10 +53,12 @@ export default function NewAndEditInvoice({ isEdit = false }) {
     }
     const paymentDue = date.toISOString().split("T")[0];
     let grandTotal = 0;
-    itemData.map((item) => (grandTotal += item.total));
-
+    itemData.map((item) => {
+      grandTotal += item.total;
+    });
+    
     const newInvoiceObj = {
-      id: generateXMString(),
+      id: isEdit ? editInvoiceData.id : generateXMString(),
       description,
       billFrom: {
         streetAddress,
@@ -74,12 +82,19 @@ export default function NewAndEditInvoice({ isEdit = false }) {
       status,
     };
 
-    invoiceData.setData([...invoiceData.data, newInvoiceObj]);
+    if (isEdit) {
+      invoiceData.data[invoiceData.data.findIndex(x => x.id === editInvoiceData.id)] = newInvoiceObj
+      invoiceData.setData([...invoiceData.data]);
+      location.href = `#/invoice/${editInvoiceData.id}`;
+    } else {
+      invoiceData.setData([...invoiceData.data, newInvoiceObj]);
+      location.href = `#/invoice/${newInvoiceObj.id}`;
+    }
   }
 
   return (
     <div className="invoice-edit">
-      <button className="invoice-backBtn" onClick={() => (location.href = "#/")}>
+      <button className="invoice-backBtn" onClick={() => isEdit ? location.href = `#/invoice/${editInvoiceData.id}` : location.href = "#/"}>
         <img src="/svg/backarrow.svg" />
         <span>Go Back</span>
       </button>
@@ -87,7 +102,7 @@ export default function NewAndEditInvoice({ isEdit = false }) {
       <div className="invoice-edit-contents">
         {isEdit ? (
           <h1>
-            Edit <span className="hashtag">#</span>XM9141
+            Edit <span className="hashtag">#</span>{editInvoiceData.id}
           </h1>
         ) : (
           <h1>New Invoice</h1>
@@ -98,56 +113,56 @@ export default function NewAndEditInvoice({ isEdit = false }) {
             <legend>Bill From</legend>
             <label className="billStreetAddress">
               <p>Street Address</p>
-              <input required type="text" name="streetAddress" />
+              <input required type="text" name="streetAddress" defaultValue={isEdit ? editInvoiceData.billFrom.streetAddress : ""} />
             </label>
             <label className="billCity">
               <p>City</p>
-              <input required type="text" name="cityBillFrom" />
+              <input required type="text" name="cityBillFrom" defaultValue={isEdit ? editInvoiceData.billFrom.city : ""} />
             </label>
             <label className="billPostCode">
               <p>Post Code</p>
-              <input required type="text" name="postCodeBillFrom" />
+              <input required type="text" name="postCodeBillFrom" defaultValue={isEdit ? editInvoiceData.billFrom.postCode : ""} />
             </label>
             <label className="billCountry">
               <p>Country</p>
-              <input required type="text" name="countryBillFrom" />
+              <input required type="text" name="countryBillFrom" defaultValue={isEdit ? editInvoiceData.billFrom.country : ""} />
             </label>
           </fieldset>
           <fieldset className="billToFieldset">
             <legend>Bill To</legend>
             <label className="billToName">
               <p>Client’s Name</p>
-              <input required type="text" name="clientName" />
+              <input required type="text" name="clientName" defaultValue={isEdit ? editInvoiceData.billTo.clientName : ""} />
             </label>
             <label className="billToEmail">
               <p>Client’s Email</p>
-              <input required type="email" name="clientEmail" />
+              <input required type="email" name="clientEmail" defaultValue={isEdit ? editInvoiceData.billTo.clientEmail : ""} />
             </label>
             <label className="billToAddress">
               <p>Address</p>
-              <input required type="text" name="address" />
+              <input required type="text" name="address" defaultValue={isEdit ? editInvoiceData.billTo.address : ""} />
             </label>
             <label className="billToCity">
               <p>City</p>
-              <input required type="text" name="cityBillTo" />
+              <input required type="text" name="cityBillTo" defaultValue={isEdit ? editInvoiceData.billTo.city : ""} />
             </label>
             <label className="billToPostCode">
               <p>Post Code</p>
-              <input required type="text" name="postCodeBillTo" />
+              <input required type="text" name="postCodeBillTo" defaultValue={isEdit ? editInvoiceData.billTo.postCode : ""} />
             </label>
             <label className="billToCountry">
               <p>Country</p>
-              <input required type="text" name="countryBillTo" />
+              <input required type="text" name="countryBillTo" defaultValue={isEdit ? editInvoiceData.billTo.country : ""} />
             </label>
           </fieldset>
           <fieldset className="otherDatas">
             <label className="invoiceDate">
               <p>Invoice Date</p>
-              <input required type="date" name="invoiceDate" defaultValue={new Date().toISOString().split("T")[0]} />
+              <input required type="date" name="invoiceDate" defaultValue={isEdit ? editInvoiceData.invoiceDate : new Date().toISOString().split("T")[0]} />
             </label>
             <label className="paymentTerms">
               <p>Payment Terms</p>
-              <select name="paymentTerms">
+              <select name="paymentTerms" defaultValue={isEdit ? editInvoiceData.paymentTerms : "Net 30 Days"}>
                 <option>Net 30 Days</option>
                 <option>Net 3 Months</option>
                 <option>Net 6 Months</option>
@@ -156,7 +171,7 @@ export default function NewAndEditInvoice({ isEdit = false }) {
             </label>
             <label className="projectDescription">
               <p>Project Description</p>
-              <input required type="text" name="description" />
+              <input required type="text" name="description" defaultValue={isEdit ? editInvoiceData.description : ""} />
             </label>
           </fieldset>
           <fieldset className="itemListFieldset">
@@ -173,7 +188,7 @@ export default function NewAndEditInvoice({ isEdit = false }) {
             <div className="form-btns">
               {isEdit ? (
                 <>
-                  <button type="button" className="cancelBtn" onClick={() => (location.href = `#/invoice/1`)}>
+                  <button type="button" className="cancelBtn" onClick={() => (location.href = `#/invoice/${editInvoiceData.id}`)}>
                     Cancel
                   </button>
                   <button type="submit" className="saveBtn">
@@ -185,7 +200,7 @@ export default function NewAndEditInvoice({ isEdit = false }) {
                   <button type="button" className="cancelBtn" onClick={() => (location.href = `#/`)}>
                     Discard
                   </button>
-                  <button type="button" className="saveDraftBtn" onClick={handleSaveDraft}>
+                  <button type="button" className="saveDraftBtn" onClick={(e) => handleSubmit(e, "Draft")}>
                     Save as Draft
                   </button>
                   <button type="submit" className="saveBtn">
@@ -204,7 +219,7 @@ export default function NewAndEditInvoice({ isEdit = false }) {
 function InvoiceItem({ itemName, quantitiy, price, total, index, setItemData }) {
   const itemQty = useRef(null);
   const itemPrice = useRef(null);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(total);
 
   useEffect(() => {
     setItemData((prev) => {

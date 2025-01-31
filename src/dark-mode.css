@@ -13,6 +13,12 @@ body.dark {
   header {
     background-color: #1e2139;
   }
+  
+  .invoice-header {
+    h4 {
+      color: #fff;
+    }
+  }
 
   .filter-dropdown-btn {
     color: #fff;
@@ -95,18 +101,26 @@ body.dark {
     background-color: #1e2139;
   }
 
-  .cancelBtn{
+  .cancelBtn {
     background-color: #252945;
-    color: #DFE3FA;
+    color: #dfe3fa;
   }
 
-  .saveDraftBtn{
-    background-color: #373B53;
-    color: #DFE3FA;
+  .saveDraftBtn {
+    background-color: #373b53;
+    color: #dfe3fa;
   }
 
-  dialog{
-    background-color: #1E2139;
-    box-shadow: 0px 10px 10px -10px #48549F1A;
+  dialog {
+    background-color: #1e2139;
+    box-shadow: 0px 10px 10px -10px #48549f1a;
+  }
+
+  .invoice-status.draft {
+    background-color: rgba(223, 227, 250, 0.0571);
+    color: #dfe3fa;
+    svg {
+      fill: #dfe3fa;
+    }
   }
 }

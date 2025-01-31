@@ -14,7 +14,7 @@ const routers = [
   },
   {
     url: "/edit-invoice",
-    component: <NewAndEditInvoice isEdit={true} />
+    component: <NewAndEditInvoice />
   },
   {
     url: "/new-invoice",

@@ -1,12 +1,27 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
+
+import { InvoiceData } from "../App";
 
 export default function InvoiceDetails() {
   const deleteDialog = useRef(null);
 
+  const invoiceData = useContext(InvoiceData);
+  const id = location.hash.substring(1).split("/").at(-1);
+  const currentInvoiceData = invoiceData.data.find((x) => x.id === id);
+  if (!currentInvoiceData) {
+    location.href = "#/";
+    return;
+  }
+  
+  function handleMarkPaid() {
+    currentInvoiceData.status = "Paid";
+    invoiceData.setData([...invoiceData.data]);
+  }
+
   return (
     <>
       <div className="invoice-details">
-        <button className="invoice-backBtn" onClick={() => location.href = "#/"}>
+        <button className="invoice-backBtn" onClick={() => (location.href = "#/")}>
           <img src="/svg/backarrow.svg" />
           <span>Go Back</span>
         </button>
@@ -14,11 +29,11 @@ export default function InvoiceDetails() {
         <div className="invoice-details-contents">
           <div className="invoice-details-status">
             <h4>Status</h4>
-            <div className="invoice-status pending">
+            <div className={"invoice-status" + ` ${currentInvoiceData.status.toLowerCase()}`}>
               <svg width="8" height="8" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="4" cy="4" r="4" />
               </svg>
-              Pending
+              {currentInvoiceData.status}
             </div>
           </div>
 
@@ -26,90 +41,103 @@ export default function InvoiceDetails() {
             <div className="invoice-details-titles">
               <h3>
                 <span className="hashtag">#</span>
-                XM9141
+                {currentInvoiceData.id}
               </h3>
-              <h4>Graphic Design</h4>
+              <h4>{currentInvoiceData.description}</h4>
             </div>
 
             <div className="invoice-details-address">
-              <span>19 Union Terrace</span>
-              <span>London</span>
-              <span>E1 3EZ</span>
-              <span>United Kingdom</span>
+              <span>{currentInvoiceData.billFrom.streetAddress}</span>
+              <span>{currentInvoiceData.billFrom.city}</span>
+              <span>{currentInvoiceData.billFrom.postCode}</span>
+              <span>{currentInvoiceData.billFrom.country}</span>
             </div>
 
             <div className="invoice-details-payment">
               <div className="invoice-details-payment-invoiceDate">
                 <h4>Invoice Date</h4>
-                <span>21 Aug 2021</span>
+                <span>{currentInvoiceData.invoiceDate}</span>
               </div>
               <div className="invoice-details-payment-dueDate">
                 <h4>Payment Due</h4>
-                <span>20 Sep 2021</span>
+                <span>{currentInvoiceData.paymentDue}</span>
               </div>
               <div className="invoice-details-payment-billTo">
                 <h4>Bill To</h4>
-                <h3>Alex Grim</h3>
+                <h3>{currentInvoiceData.billTo.clientName}</h3>
                 <div className="invoice-details-payment-address">
-                  <span>84 Church Way</span>
-                  <span>Bradford</span>
-                  <span>BD1 9PB</span>
-                  <span>United Kingdom</span>
+                  <span>{currentInvoiceData.billTo.address}</span>
+                  <span>{currentInvoiceData.billTo.city}</span>
+                  <span>{currentInvoiceData.billTo.postCode}</span>
+                  <span>{currentInvoiceData.billTo.country}</span>
                 </div>
               </div>
               <div className="invoice-details-payment-email">
                 <h4>Sent to</h4>
-                <strong>alexgrim@mail.com</strong>
+                <strong>{currentInvoiceData.billTo.clientEmail}</strong>
               </div>
             </div>
 
             <div className="invoice-details-items-contents">
               <div className="invoice-details-items">
-                {Array.from({ length: 4 }, () => (
-                  <InvoiceItem />
+                {currentInvoiceData.items.map((item, i) => (
+                  <InvoiceItem key={i} {...item} />
                 ))}
               </div>
               <div className="invoice-details-grandTotal">
                 <span>Grand Total</span>
-                <h2>£ 556.00</h2>
+                <h2>£ {currentInvoiceData.grandTotal.toFixed(2)}</h2>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="invoice-details-interactionBtns">
-        <button className="editBtn" onClick={() => location.href = `#/edit-invoice/1`}>Edit</button>
-        <button className="removeBtn" onClick={() => deleteDialog.current.showModal()}>Delete</button>
-        <button className="markBtn">Mark as Paid</button>
+        <button className="editBtn" onClick={() => (location.href = `#/edit-invoice/${id}`)}>
+          Edit
+        </button>
+        <button className="removeBtn" onClick={() => deleteDialog.current.showModal()}>
+          Delete
+        </button>
+        <button className="markBtn" onClick={handleMarkPaid}>
+          Mark as Paid
+        </button>
       </div>
-      <ConfirmDeleteModal deleteDialog={deleteDialog} />
+      <ConfirmDeleteModal deleteDialog={deleteDialog} invoiceId={id} invoiceData={invoiceData} />
     </>
   );
 }
 
-function InvoiceItem() {
+function InvoiceItem({ itemName, price, quantitiy, total }) {
   return (
     <div className="invoice-details-item">
       <div className="invoice-details-item-data">
-        <h3>Banner Design</h3>
-        <h4>1 x £ 156.00</h4>
+        <h3>{itemName}</h3>
+        <h4>
+          {quantitiy} x £ {price.toFixed(2)}
+        </h4>
       </div>
-      <h3>£ 156.00</h3>
+      <h3>£ {total.toFixed(2)}</h3>
     </div>
   );
 }
 
-function ConfirmDeleteModal({ deleteDialog }) {
+function ConfirmDeleteModal({ deleteDialog, invoiceId, invoiceData }) {
+  function handleDelete() {
+    location.href = "#/";
+    invoiceData.setData(invoiceData.data.filter((x) => x.id !== invoiceId));
+  }
+
   return (
     <dialog ref={deleteDialog}>
       <form method="dialog">
         <h2>Confirm Deletion</h2>
-        <p>Are you sure you want to delete invoice #XM9141? This action cannot be undone.</p>
+        <p>Are you sure you want to delete invoice #{invoiceId}? This action cannot be undone.</p>
         <div className="dialog-btn-group">
           <button type="button" className="cancelBtn" onClick={() => deleteDialog.current.close()}>
             Cancel
           </button>
-          <button type="submit" className="removeBtn">
+          <button type="submit" className="removeBtn" onClick={handleDelete}>
             Delete
           </button>
         </div>
