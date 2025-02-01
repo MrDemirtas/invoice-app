@@ -15,17 +15,20 @@ function generateXMString() {
   return `XM${randomNumber}`;
 }
 
-let isEdit = false;
 let editInvoiceData = null;
-export default function NewAndEditInvoice() {
+export default function NewAndEditInvoice({ isDialog = false, isEdit = false, editId = 0 }) {
   const invoiceData = useContext(InvoiceData);
-  if (location.hash.substring(1).split("/").at(1) === "edit-invoice") {
-    isEdit = true;
-    const id = location.hash.substring(1).split("/").at(-1);
+  if (!isDialog && !isEdit) {
+    if (location.hash.substring(1).split("/").at(1) === "edit-invoice") {
+      const id = location.hash.substring(1).split("/").at(-1);
+      editInvoiceData = invoiceData.data.find((x) => x.id === id);
+      isEdit = true;
+    } else {
+      editInvoiceData = null;
+    }
+  }else if (isDialog !== false && isEdit) {
+    const id = editId;
     editInvoiceData = invoiceData.data.find((x) => x.id === id);
-  }else{
-    isEdit = false;
-    editInvoiceData = null;
   }
 
   const formRef = useRef(null);
@@ -56,7 +59,7 @@ export default function NewAndEditInvoice() {
     itemData.map((item) => {
       grandTotal += item.total;
     });
-    
+
     const newInvoiceObj = {
       id: isEdit ? editInvoiceData.id : generateXMString(),
       description,
@@ -83,18 +86,34 @@ export default function NewAndEditInvoice() {
     };
 
     if (isEdit) {
-      invoiceData.data[invoiceData.data.findIndex(x => x.id === editInvoiceData.id)] = newInvoiceObj
+      invoiceData.data[invoiceData.data.findIndex((x) => x.id === editInvoiceData.id)] = newInvoiceObj;
       invoiceData.setData([...invoiceData.data]);
-      location.href = `#/invoice/${editInvoiceData.id}`;
+      if (!isDialog) {
+        location.href = `#/invoice/${editInvoiceData.id}`;
+      } else {
+        isDialog.current.close();
+      }
     } else {
       invoiceData.setData([...invoiceData.data, newInvoiceObj]);
       location.href = `#/invoice/${newInvoiceObj.id}`;
     }
   }
 
+  function handleBackBtn() {
+    if (!isDialog) {
+      if (isEdit) {
+        location.href = `#/invoice/${editInvoiceData.id}`;
+      } else {
+        location.href = "#/";
+      }
+    } else {
+      isDialog.current.close();
+    }
+  }
+
   return (
     <div className="invoice-edit">
-      <button className="invoice-backBtn" onClick={() => isEdit ? location.href = `#/invoice/${editInvoiceData.id}` : location.href = "#/"}>
+      <button className="invoice-backBtn" onClick={handleBackBtn}>
         <img src="/svg/backarrow.svg" />
         <span>Go Back</span>
       </button>
@@ -102,7 +121,8 @@ export default function NewAndEditInvoice() {
       <div className="invoice-edit-contents">
         {isEdit ? (
           <h1>
-            Edit <span className="hashtag">#</span>{editInvoiceData.id}
+            Edit <span className="hashtag">#</span>
+            {editInvoiceData.id}
           </h1>
         ) : (
           <h1>New Invoice</h1>
@@ -188,7 +208,7 @@ export default function NewAndEditInvoice() {
             <div className="form-btns">
               {isEdit ? (
                 <>
-                  <button type="button" className="cancelBtn" onClick={() => (location.href = `#/invoice/${editInvoiceData.id}`)}>
+                  <button type="button" className="cancelBtn" onClick={handleBackBtn}>
                     Cancel
                   </button>
                   <button type="submit" className="saveBtn">
@@ -197,7 +217,7 @@ export default function NewAndEditInvoice() {
                 </>
               ) : (
                 <>
-                  <button type="button" className="cancelBtn" onClick={() => (location.href = `#/`)}>
+                  <button type="button" className="cancelBtn" onClick={handleBackBtn}>
                     Discard
                   </button>
                   <button type="button" className="saveDraftBtn" onClick={(e) => handleSubmit(e, "Draft")}>

@@ -50,7 +50,9 @@ body.dark {
   }
 
   .invoice-details-payment {
-    span,
+    span{
+      color: #DFE3FA;
+    }
     strong {
       color: #fff;
     }
@@ -121,6 +123,12 @@ body.dark {
     color: #dfe3fa;
     svg {
       fill: #dfe3fa;
+    }
+  }
+
+  .invoice-details-address{
+    span{
+      color: #DFE3FA;
     }
   }
 }

@@ -1,10 +1,12 @@
+import { InvoiceData, ScreenSize } from "../App";
 import { useContext, useRef } from "react";
 
-import { InvoiceData } from "../App";
+import NewAndEditInvoice from "./NewAndEditInvoice";
 
 export default function InvoiceDetails() {
   const deleteDialog = useRef(null);
 
+  const screenSize = useContext(ScreenSize);
   const invoiceData = useContext(InvoiceData);
   const id = location.hash.substring(1).split("/").at(-1);
   const currentInvoiceData = invoiceData.data.find((x) => x.id === id);
@@ -12,7 +14,7 @@ export default function InvoiceDetails() {
     location.href = "#/";
     return;
   }
-  
+
   function handleMarkPaid() {
     currentInvoiceData.status = "Paid";
     invoiceData.setData([...invoiceData.data]);
@@ -27,15 +29,7 @@ export default function InvoiceDetails() {
         </button>
 
         <div className="invoice-details-contents">
-          <div className="invoice-details-status">
-            <h4>Status</h4>
-            <div className={"invoice-status" + ` ${currentInvoiceData.status.toLowerCase()}`}>
-              <svg width="8" height="8" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="4" cy="4" r="4" />
-              </svg>
-              {currentInvoiceData.status}
-            </div>
-          </div>
+          {screenSize > 768 ? <InvoiceInteractionsTablet currentInvoiceData={currentInvoiceData} handleMarkPaid={handleMarkPaid} id={id} deleteDialog={deleteDialog} /> : <InvoiceInteractionsMobile currentInvoiceData={currentInvoiceData} />}
 
           <div className="invoice-details-body">
             <div className="invoice-details-titles">
@@ -80,9 +74,25 @@ export default function InvoiceDetails() {
 
             <div className="invoice-details-items-contents">
               <div className="invoice-details-items">
-                {currentInvoiceData.items.map((item, i) => (
-                  <InvoiceItem key={i} {...item} />
-                ))}
+                {screenSize > 768 ? (
+                  <table className="invoice-details-item-table">
+                    <thead>
+                      <tr>
+                        <th>Item Name</th>
+                        <th style={{textAlign: "center"}}>QTY.</th>
+                        <th style={{textAlign: "right"}}>Price</th>
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentInvoiceData.items.map((item, i) => (
+                        <InvoiceItemTable key={i} {...item} />
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  currentInvoiceData.items.map((item, i) => <InvoiceItem key={i} {...item} />)
+                )}
               </div>
               <div className="invoice-details-grandTotal">
                 <span>Grand Total</span>
@@ -92,17 +102,19 @@ export default function InvoiceDetails() {
           </div>
         </div>
       </div>
-      <div className="invoice-details-interactionBtns">
-        <button className="editBtn" onClick={() => (location.href = `#/edit-invoice/${id}`)}>
-          Edit
-        </button>
-        <button className="removeBtn" onClick={() => deleteDialog.current.showModal()}>
-          Delete
-        </button>
-        <button className="markBtn" onClick={handleMarkPaid}>
-          Mark as Paid
-        </button>
-      </div>
+      {screenSize < 768 && (
+        <div className="invoice-details-interactionBtns">
+          <button className="editBtn" onClick={() => (location.href = `#/edit-invoice/${id}`)}>
+            Edit
+          </button>
+          <button className="removeBtn" onClick={() => deleteDialog.current.showModal()}>
+            Delete
+          </button>
+          <button className="markBtn" onClick={handleMarkPaid}>
+            Mark as Paid
+          </button>
+        </div>
+      )}
       <ConfirmDeleteModal deleteDialog={deleteDialog} invoiceId={id} invoiceData={invoiceData} />
     </>
   );
@@ -119,6 +131,17 @@ function InvoiceItem({ itemName, price, quantitiy, total }) {
       </div>
       <h3>£ {total.toFixed(2)}</h3>
     </div>
+  );
+}
+
+function InvoiceItemTable({ itemName, price, quantitiy, total }) {
+  return (
+    <tr>
+      <td>{itemName}</td>
+      <td style={{textAlign: "center"}}>{quantitiy}</td>
+      <td style={{textAlign: "right"}}>£ {price}</td>
+      <td>£ {total.toFixed(2)}</td>
+    </tr>
   );
 }
 
@@ -142,6 +165,60 @@ function ConfirmDeleteModal({ deleteDialog, invoiceId, invoiceData }) {
           </button>
         </div>
       </form>
+    </dialog>
+  );
+}
+
+function InvoiceInteractionsMobile({ currentInvoiceData }) {
+  return (
+    <div className="invoice-details-status">
+      <h4>Status</h4>
+      <div className={"invoice-status" + ` ${currentInvoiceData.status.toLowerCase()}`}>
+        <svg width="8" height="8" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="4" cy="4" r="4" />
+        </svg>
+        {currentInvoiceData.status}
+      </div>
+    </div>
+  );
+}
+
+function InvoiceInteractionsTablet({ currentInvoiceData, handleMarkPaid, id, deleteDialog }) {
+  const newInvoiceDialog = useRef(null);
+
+  return (
+    <>
+      <div className="invoice-details-status">
+        <div className="invoice-details-status-left">
+          <h4>Status</h4>
+          <div className={"invoice-status" + ` ${currentInvoiceData.status.toLowerCase()}`}>
+            <svg width="8" height="8" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="4" cy="4" r="4" />
+            </svg>
+            {currentInvoiceData.status}
+          </div>
+        </div>
+        <div className="invoice-details-interactionBtns">
+          <button className="editBtn" onClick={() => newInvoiceDialog.current.showModal()}>
+            Edit
+          </button>
+          <button className="removeBtn" onClick={() => deleteDialog.current.showModal()}>
+            Delete
+          </button>
+          <button className="markBtn" onClick={handleMarkPaid}>
+            Mark as Paid
+          </button>
+        </div>
+      </div>
+      <NewInvoiceTablet newInvoiceDialog={newInvoiceDialog} id={id} />
+    </>
+  );
+}
+
+function NewInvoiceTablet({ newInvoiceDialog, id }) {
+  return (
+    <dialog ref={newInvoiceDialog} className="newAndEditDialog">
+      <NewAndEditInvoice isDialog={newInvoiceDialog} isEdit={true} editId={id} />
     </dialog>
   );
 }

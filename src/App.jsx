@@ -14,6 +14,7 @@ export default function App() {
   useEffect(() => {
     window.addEventListener("resize", (e) => setScreenSize(e.target.innerWidth));
     window.addEventListener("hashchange", () => setRoute(location.hash.substring(1)));
+    setScreenSize(window.innerWidth)
   }, []);
 
   useEffect(() => {
