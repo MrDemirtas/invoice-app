@@ -26,7 +26,7 @@ export default function NewAndEditInvoice({ isDialog = false, isEdit = false, ed
     } else {
       editInvoiceData = null;
     }
-  }else if (isDialog !== false && isEdit) {
+  } else if (isDialog !== false && isEdit) {
     const id = editId;
     editInvoiceData = invoiceData.data.find((x) => x.id === id);
   }
@@ -45,14 +45,14 @@ export default function NewAndEditInvoice({ isDialog = false, isEdit = false, ed
     const formObj = Object.fromEntries(formData);
     const { description, address, clientEmail, clientName, invoiceDate, paymentTerms, streetAddress } = formObj;
     const date = new Date(invoiceDate);
-    if (paymentTerms === "Net 30 Days") {
+    if (paymentTerms === "Net 1 Day") {
+      date.setDate(date.getDate() + 1);
+    } else if (paymentTerms === "Net 7 Days") {
+      date.setDate(date.getDate() + 7);
+    } else if (paymentTerms === "Net 14 Days") {
+      date.setDate(date.getDate() + 14);
+    } else if (paymentTerms === "Net 30 Days") {
       date.setDate(date.getDate() + 30);
-    } else if (paymentTerms === "Net 3 Months") {
-      date.setMonth(date.getMonth() + 3);
-    } else if (paymentTerms === "Net 6 Months") {
-      date.setMonth(date.getMonth() + 6);
-    } else if (paymentTerms === "Net 1 Year") {
-      date.setFullYear(date.getFullYear() + 1);
     }
     const paymentDue = date.toISOString().split("T")[0];
     let grandTotal = 0;
@@ -183,10 +183,10 @@ export default function NewAndEditInvoice({ isDialog = false, isEdit = false, ed
             <label className="paymentTerms">
               <p>Payment Terms</p>
               <select name="paymentTerms" defaultValue={isEdit ? editInvoiceData.paymentTerms : "Net 30 Days"}>
+                <option>Net 1 Day</option>
+                <option>Net 7 Days</option>
+                <option>Net 14 Days</option>
                 <option>Net 30 Days</option>
-                <option>Net 3 Months</option>
-                <option>Net 6 Months</option>
-                <option>Net 1 Year</option>
               </select>
             </label>
             <label className="projectDescription">
@@ -251,9 +251,6 @@ function InvoiceItem({ itemName, quantitiy, price, total, index, setItemData }) 
   function handleUpdate(e) {
     setItemData((prev) => {
       if (e.target.name === "price" || e.target.name === "quantitiy") {
-        if (e.target.value === "" || e.target.value < 0) {
-          e.target.value = 0;
-        }
         e.target.value = parseInt(e.target.value);
         prev[index][e.target.name] = parseInt(e.target.value);
       } else {
@@ -272,11 +269,11 @@ function InvoiceItem({ itemName, quantitiy, price, total, index, setItemData }) 
       </label>
       <label className="itemQty">
         <p>Qty.</p>
-        <input ref={itemQty} required type="number" name="quantitiy" value={quantitiy} onChange={handleUpdate} />
+        <input ref={itemQty} required type="number" min={0} name="quantitiy" value={quantitiy} onChange={handleUpdate} />
       </label>
       <label className="itemPrice">
         <p>Price</p>
-        <input ref={itemPrice} required type="number" name="price" value={price} onChange={handleUpdate} />
+        <input ref={itemPrice} required type="number" min={0} name="price" value={price} onChange={handleUpdate} />
       </label>
       <label className="itemTotalPrice">
         <p>Total</p>

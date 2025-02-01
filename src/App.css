@@ -119,6 +119,10 @@ main {
     color: #fff;
     padding-right: 10px;
   }
+
+  &:hover {
+    background-color: #9277ff;
+  }
 }
 
 .nothing-here-contents {
@@ -130,7 +134,7 @@ main {
   margin-top: 102px;
   max-width: 240px;
   margin-inline: auto;
-  
+
   h4 {
     font-size: 13px;
     font-weight: 500;
@@ -178,6 +182,10 @@ main {
     grid-column: 2;
     grid-row: 1;
     justify-self: end;
+  }
+
+  &:hover {
+    border: 1px solid #7c5dfa;
   }
 }
 
@@ -257,6 +265,9 @@ main {
   border: none;
   background-color: transparent;
   cursor: pointer;
+  &:hover {
+    color: #7e88c3;
+  }
 }
 
 .invoice-details-contents {
@@ -449,22 +460,34 @@ main {
 .editBtn {
   color: #7e88c3;
   background-color: #f9fafe;
+
+  &:hover {
+    background-color: #dfe3fa;
+  }
 }
 
 .removeBtn {
   color: #fff;
   background-color: #ec5757;
+  &:hover {
+    background-color: #ff9797;
+  }
 }
 
 .markBtn {
   color: #fff;
   background-color: #7c5dfa;
+  &:hover {
+    background-color: #9277ff;
+  }
 }
 
 .invoice-edit {
   margin-top: 32px;
   padding-inline: 24px;
   padding-bottom: 200px;
+  max-width: 730px;
+  margin-inline: auto;
 }
 
 .hashtag {
@@ -511,6 +534,10 @@ main {
           letter-spacing: -0.25px;
           color: #0c0e16;
           padding: 16px 20px;
+          &:hover,
+          &:focus {
+            border-color: #7c5dfa !important;
+          }
         }
       }
     }
@@ -565,6 +592,9 @@ main {
     background-color: transparent;
     border: none;
     cursor: pointer;
+    &:hover {
+      filter: invert(45%) sepia(20%) saturate(2535%) hue-rotate(319deg) brightness(99%) contrast(86%);
+    }
   }
 }
 
@@ -577,6 +607,7 @@ main {
     padding: 16px 0;
     background-color: transparent !important;
     border: none !important;
+    color: #888eb0;
   }
 }
 
@@ -586,6 +617,14 @@ main {
   border: none;
   border-radius: 24px;
   color: #7e88c3;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: -0.25px;
+  &:hover {
+    background-color: #dfe3fa;
+  }
 }
 
 .form-interactions {
@@ -623,6 +662,9 @@ main {
 .saveBtn {
   background-color: #7c5dfa;
   color: #fff;
+  &:hover {
+    background-color: #9277ff;
+  }
 }
 
 .linear-effect {
@@ -634,6 +676,9 @@ main {
 .saveDraftBtn {
   background-color: #373b53;
   color: #888eb0;
+  &:hover {
+    background-color: #0c0e16;
+  }
 }
 
 dialog {
@@ -694,7 +739,7 @@ dialog {
     line-height: 18px;
     letter-spacing: -0.10000000149011612px;
     text-align: left;
-    color: #dfe3fa;
+    color: #7e88c3;
     padding-bottom: 16px;
     &:last-child {
       text-align: right;
@@ -706,12 +751,12 @@ dialog {
     font-weight: 700;
     line-height: 15px;
     letter-spacing: -0.25px;
-    color: #dfe3fa;
+    color: #7e88c3;
     padding-block: 16px;
 
     &:first-child,
     &:last-child {
-      color: #fff;
+      color: #000;
     }
 
     &:first-child {
@@ -931,10 +976,5 @@ dialog {
     img {
       padding-block: 24px;
     }
-  }
-
-  .invoice-edit {
-    width: 730px;
-    margin-inline: auto;
   }
 }

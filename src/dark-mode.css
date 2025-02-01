@@ -13,7 +13,7 @@ body.dark {
   header {
     background-color: #1e2139;
   }
-  
+
   .invoice-header {
     h4 {
       color: #fff;
@@ -37,6 +37,9 @@ body.dark {
 
   .invoice-backBtn {
     color: #fff;
+    &:hover {
+      color: #888EB0;
+    }
   }
 
   .invoice-details-status {
@@ -50,8 +53,8 @@ body.dark {
   }
 
   .invoice-details-payment {
-    span{
-      color: #DFE3FA;
+    span {
+      color: #dfe3fa;
     }
     strong {
       color: #fff;
@@ -74,6 +77,17 @@ body.dark {
   .editBtn {
     background-color: #252945;
     color: #dfe3fa;
+    &:hover {
+      background-color: #fff;
+      color: #7E88C3;
+    }
+  }
+
+  .newAndEditDialog{
+    background-color: #141625;
+    .form-btns{
+      background-color: #141625;
+    }
   }
 
   .invoice-edit-contents {
@@ -111,6 +125,9 @@ body.dark {
   .saveDraftBtn {
     background-color: #373b53;
     color: #dfe3fa;
+    &:hover {
+      background-color: #1E2139;
+    }
   }
 
   dialog {
@@ -126,9 +143,29 @@ body.dark {
     }
   }
 
-  .invoice-details-address{
-    span{
+  .invoice-details-address {
+    span {
+      color: #dfe3fa;
+    }
+  }
+
+  .filter-dropdown-menu {
+    background-color: #252945;
+    box-shadow: 0px 10px 20px 0px #00000040;
+    label {
+      color: #fff;
+    }
+  }
+
+  .invoice-details-item-table{
+    th{
       color: #DFE3FA;
+    }
+    td  {
+      color: #DFE3FA;
+      &:first-child, &:last-child{
+        color: #fff;
+      }
     }
   }
 }
