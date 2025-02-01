@@ -1,18 +1,22 @@
-import { InvoiceData } from "../App";
+import { InvoiceData, ScreenSize } from "../App";
+
 import { useContext } from "react";
 
 export default function HomePage() {
+  const invoiceData = useContext(InvoiceData);
+  const screenSize = useContext(ScreenSize);
+
   return (
     <main>
       <div className="home-page-header">
         <div className="home-page-titles">
           <h1>Invoices</h1>
-          <h4>No invoices</h4>
+          <h4>{invoiceData.data.length === 0 ? "No invoices" : `${invoiceData.data.length} invoices`}</h4>
         </div>
         <div className="home-page-interactions">
           <div className="home-page-filter">
             <button className="filter-dropdown-btn">
-              <span>Filter</span>
+              <span>{screenSize > 768 ? "Filter by status" : "Filter"}</span>
               <img src="/svg/dropdownarrow.svg" />
             </button>
           </div>
@@ -20,34 +24,26 @@ export default function HomePage() {
             <figure>
               <img src="/svg/new-plus.svg" />
             </figure>
-            <span>New</span>
+            <span>{screenSize > 768 ? "New Invoice" : "New"}</span>
           </button>
         </div>
       </div>
-      <Invoices />
+      <Invoices invoiceData={invoiceData} />
     </main>
   );
 }
 
-function Invoices() {
-  const invoiceData = useContext(InvoiceData);
-
-  return (
-    <div className="invoices-contents">
-      {invoiceData.data.length !== 0 ? 
-        invoiceData.data.map((invoice) => (
-          <Invoice key={invoice.id} {...invoice} />
-      )) : <NothingHere />}
-    </div>
-  );
+function Invoices({ invoiceData }) {
+  return <div className="invoices-contents">{invoiceData.data.length !== 0 ? invoiceData.data.map((invoice) => <Invoice key={invoice.id} {...invoice} />) : <NothingHere />}</div>;
 }
 
-function Invoice({id, billTo, paymentDue, grandTotal, status}) {
+function Invoice({ id, billTo, paymentDue, grandTotal, status }) {
   return (
     <div className="invoice-item" onClick={() => (location.href = `#/invoice/${id}`)}>
       <div className="invoice-header">
         <h3>
-          <span>#</span>{id}
+          <span>#</span>
+          {id}
         </h3>
         <h4>{billTo.clientName}</h4>
       </div>

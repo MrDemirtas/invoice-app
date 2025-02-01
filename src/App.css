@@ -147,8 +147,7 @@ main {
   padding: 24px;
   background-color: #fff;
   box-shadow: 0px 10px 10px -10px #48549f1a;
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 24px;
   cursor: pointer;
 }
@@ -560,7 +559,7 @@ main {
 }
 
 .itemTotalPrice {
-  input[disabled]{
+  input[disabled] {
     padding: 16px 0;
     background-color: transparent !important;
     border: none !important;
@@ -668,4 +667,26 @@ dialog {
     line-height: 15px;
     letter-spacing: -0.25px;
   }
+}
+
+@media screen and (min-width: 768px) {
+  header {
+    > img {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  main{
+    margin-top: 62px;
+  }
+
+  .home-page-titles {
+    h1 {
+      font-size: 36px;
+      line-height: 33.12px;
+      letter-spacing: -1.125px;
+    }
+  }
+
 }
